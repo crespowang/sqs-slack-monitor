@@ -1,0 +1,26 @@
+{
+  "name": "sqs-slack-monitor",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:crespowang/sqs-slack-monitor.git",
+  "author": "Crespo Wang <crespo.wang@inquisitive.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@middy/core": "^1.4.0",
+    "@middy/do-not-wait-for-empty-event-loop": "^1.4.0",
+    "@middy/http-event-normalizer": "^1.4.0",
+    "@middy/http-header-normalizer": "^1.4.0",
+    "aws-sdk": "^2.740.0",
+    "serverless": "2.9.0",
+    "typescript": "^4.0.5"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.6",
+    "serverless-domain-manager": "^5.0.0",
+    "serverless-offline": "^6.0.0-alpha.67",
+    "serverless-webpack": "^5.3.1",
+    "ts-loader": "^8.0.7",
+    "webpack": "^5.3.2",
+    "webpack-node-externals": "^2.5.2"
+  }
+}

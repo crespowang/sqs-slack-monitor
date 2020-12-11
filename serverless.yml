@@ -1,0 +1,53 @@
+service: slack-sqs-monitor
+frameworkVersion: "2.9.0"
+provider:
+  name: aws
+  versionFunctions: false
+  runtime: nodejs12.x
+  region: ap-southeast-2
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        # You should only give least permissions to your functions.
+        - "sqs:*"
+      Resource:
+        - arn:aws:sqs:ap-southeast-2:xxxxxxxx:sqs.fifo
+        - arn:aws:sqs:ap-southeast-2:xxxxxxxx:deadletter.fifo
+
+plugins:
+  - serverless-webpack
+  - serverless-domain-manager
+
+custom:
+  customDomain:
+    rest:
+      domainName: labs.mianio.com
+      basePath: sqs-monitor
+      createRoute53Record: true
+      securityPolicy: tls_1_2
+  webpack:
+    webpackConfig: "webpack.config.js"
+    packager: "yarn"
+
+functions:
+  monitor:
+    handler: functions/monitor.handler
+    desciption: The function has the dead letter queue as the event, and forward the event to Slack
+    tags:
+      name: Monitor
+    environment:
+      SLACK_ENDPOINT: https://hooks.slack.com/services/XXXXXXX/XXXXXX/XXXXXXXXX
+    events:
+      - sqs:
+          arn: arn:aws:sqs:ap-southeast-2:xxxxxxxx:deadletter.fifo
+
+  command:
+    handler: functions/command.handler
+    tags:
+      name: Command
+      desciption: The function handles Slack action and place the message back to the queue
+    events:
+      - http:
+          path: slack
+          method: post
+          cors: true
